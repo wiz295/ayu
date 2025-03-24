@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For my Cutuu...</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: pan-y;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #24a7fe, #72eaff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+            overflow: hidden;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            overscroll-behavior: contain;
+        }
+
+        /* Star Effect */
+        @keyframes twinkle {
+            0%, 100% { 
+                opacity: 0.2; 
+                transform: scale(0.3) rotate(0deg);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.2) rotate(180deg);
+            }
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255,255,255,0.7);
+            animation: twinkle 3s infinite;
+            z-index: 1;
+            transition: all 0.5s ease;
+        }
+
+        /* Particle Effect */
+        @keyframes float {
+            0% { 
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-50px) rotate(180deg);
+                opacity: 0.9;
+            }
+            100% { 
+                transform: translateY(0) rotate(360deg);
+                opacity: 0.7;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255,255,255,0.5);
+            animation: float 4s infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Heart Particles */
+        @keyframes heartFloat {
+            0% { 
+                transform: translateY(0) scale(0.5);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-100px) scale(1);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(0) scale(0.5);
+                opacity: 0.5;
+            }
+        }
+
+        .heart-particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255,105,180,0.7);
+            transform: rotate(45deg);
+            z-index: 3;
+            animation: heartFloat 5s infinite;
+        }
+
+        .heart-particle::before,
+        .heart-particle::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255,105,180,0.7);
+            border-radius: 50%;
+        }
+
+        .heart-particle::before {
+            left: -5px;
+        }
+
+        .heart-particle::after {
+            top: -5px;
+        }
+
+        /* Envelope Container */
+        @keyframes gentleFloat {
+            0%, 100% { 
+                transform: translateY(0);
+            }
+            50% { 
+                transform: translateY(-15px);
+            }
+        }
+
+        .envelope-container {
+            width: 90vw;
+            max-width: 380px;
+            height: 60vh;
+            max-height: 500px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+            z-index: 10;
+            animation: gentleFloat 6s infinite ease-in-out;
+        }
+
+        .envelope {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .envelope-container.open .envelope {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-front, 
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            transition: all 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .envelope-front {
+            background: linear-gradient(145deg, #4a90e2, #77e8ff);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+            text-align: center;
+            padding: 0 15px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .envelope-back {
+            background: linear-gradient(to bottom right, #f0f8ff, #e6f2ff);
+            transform: rotateX(180deg);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        #message {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            line-height: 1.7;
+            color: #444;
+            max-height: 100%;
+            overflow-y: auto;
+            padding: 15px;
+            text-align: center;
+            white-space: pre-wrap;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        /* Line Reveal Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-line {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .message-line.visible {
+            animation: fadeIn 0.8s forwards;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .envelope-container {
+                width: 80vw;
+                height: 50vh;
+                max-height: 600px;
+            }
+
+            .envelope-front {
+                font-size: 22px;
+            }
+
+            #message {
+                font-size: 16px;
+                padding: 10px;
+                line-height: 1.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="stars-container"></div>
+    <div id="particle-container"></div>
+    <div id="heart-container"></div>
+    
+    <div class="envelope-container" id="envelope">
+        <div class="envelope">
+            <div class="envelope-front">
+               For someone special...❤️
+            </div>
+            <div class="envelope-back">
+                <div id="message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create Enhanced Star Effect
+        function createStars() {
+            const starsContainer = document.getElementById('stars-container');
+            for (let i = 0; i < 150; i++) {
+                let star = document.createElement("div");
+                star.className = "star";
+                star.style.left = Math.random() * 100 + "vw";
+                star.style.top = Math.random() * 100 + "vh";
+                star.style.width = (Math.random() * 4 + 1) + "px";
+                star.style.height = star.style.width;
+                star.style.animationDuration = (Math.random() * 4 + 2) + "s";
+                star.style.animationDelay = Math.random() * 3 + "s";
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Create Particle Effect
+        function createParticles() {
+            const particleContainer = document.getElementById('particle-container');
+            for (let i = 0; i < 50; i++) {
+                let particle = document.createElement("div");
+                particle.className = "particle";
+                particle.style.left = Math.random() * 100 + "vw";
+                particle.style.top = Math.random() * 100 + "vh";
+                particle.style.width = (Math.random() * 6 + 2) + "px";
+                particle.style.height = particle.style.width;
+                particle.style.animationDuration = (Math.random() * 5 + 3) + "s";
+                particle.style.animationDelay = Math.random() * 3 + "s";
+                particleContainer.appendChild(particle);
+            }
+        }
+
+        // Create Heart Particles
+        function createHeartParticles() {
+            const heartContainer = document.getElementById('heart-container');
+            for (let i = 0; i < 20; i++) {
+                let heart = document.createElement("div");
+                heart.className = "heart-particle";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.top = Math.random() * 100 + "vh";
+                heart.style.animationDuration = (Math.random() * 6 + 4) + "s";
+                heart.style.animationDelay = Math.random() * 3 + "s";
+                heartContainer.appendChild(heart);
+            }
+        }
+
+        // Get references to elements
+        const envelope = document.getElementById('envelope');
+        const message = document.getElementById('message');
+
+        // Full message
+        const fullMessage = `
+My Dear Ayushi..,
+
+You are someone so special in my life..
+which i can't express with just words...tho i try to show it through my actions sometimes...
+I don't know what is gonna happen in future...but for now i wanna enjoy each and every moment with you..
+
+All I want is ur happiness...I'll keep u happy always whether we are just frnds or something more...
+The way I treat u will never change...
+
+You are the only person who knows how to handle me...and that means so much to me...
+
+I don't even wanna think how much i'll miss u...coz ik i will...
+i'll miss ur sweet little laughs, ur 'dimaag mat kharab kro'...and most of all...
+the word...'aap'...jo ki mai bss tumhare muh se hi sunna chahta hu hamesha...
+
+I got a lot to say to you but ik it's too soon...but i hope tumhe bina bole bhi tum samajh jaogi
+kyuki meri ayushi toh smart hai na...
+
+Ik maybe yeh jo mai kr rha hu abhi woh zyada hai..but iske alawa idk how to express...
+
+Sorry but i have to say this rn that...I wanna make u mine Ayushi...mine and only mine..forever and beyond..
+
+Upar wale line ke liye sorry...but i wanted to say...
+Ik mujhme kuch buraiya hai..but i'll change...
+
+Just wanna care for u as much as i can and show all the love that i have for u and make u happy...
+
+Mujhe pata hai u like handwritten letters but since i can't meet you...so isime efforts daal diye ham..
+but handwritten next time for sure...i hope tum samajh gyi mujhe jo kehna tha...
+
+I'll just pray so that i can be with u forever...
+
+Apna ache se khyal rakhna...
+
+Merii cutuuu
+I'll miss you...`;
+
+        // Event listener for envelope
+        envelope.addEventListener('click', toggleEnvelope);
+        envelope.addEventListener('touchstart', toggleEnvelope);
+
+        function toggleEnvelope(e) {
+            // Prevent closing the envelope when interacting with the message
+            if (e.target.closest('#message')) {
+                return;
+            }
+
+            e.preventDefault();
+            this.classList.toggle('open');
+            if (this.classList.contains('open')) {
+                typeMessageSequentially();
+            }
+        }
+
+        // Prevent default touch behavior on message to allow scrolling
+        message.addEventListener('touchmove', (e) => {
+            e.stopPropagation();
+        });
+
+        // Message typing function with sequential line-by-line fading
+        function typeMessageSequentially() {
+            // Clear previous content
+            message.innerHTML = '';
+
+            // Split message into lines
+            const lines = fullMessage.split('\n');
+
+            // Function to add lines sequentially with fading
+            lines.forEach((line, index) => {
+                const lineElement = document.createElement('div');
+                lineElement.className = 'message-line';
+                lineElement.textContent = line;
+                message.appendChild(lineElement);
+
+                // Use setTimeout to create sequential reveal effect
+                setTimeout(() => {
+                    lineElement.classList.add('visible');
+                }, (index + 1) * 500); // Stagger the appearance of lines
+            });
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            createStars();
+            createParticles();
+            createHeartParticles();
+        });
+    </script>
+</body>
+</html>
